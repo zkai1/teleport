@@ -18,36 +18,36 @@ limitations under the License.
 package filesessions
 
 import (
+	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/gravitational/teleport/lib/events/test"
 	"github.com/gravitational/teleport/lib/utils"
 
-	"gopkg.in/check.v1"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestFile(t *testing.T) { check.TestingT(t) }
+// TestStreams tests various streaming upload scenarios
+func TestStreams(t *testing.T) {
+	utils.InitLoggerForTests(testing.Verbose())
 
-type FileSuite struct {
-	test.HandlerSuite
-}
+	dir, err := ioutil.TempDir("", "teleport-streams")
+	assert.Nil(t, err)
+	defer os.RemoveAll(dir)
 
-var _ = check.Suite(&FileSuite{})
-
-func (s *FileSuite) SetUpSuite(c *check.C) {
-	utils.InitLoggerForTests()
-
-	var err error
-	s.HandlerSuite.Handler, err = NewHandler(Config{
-		Directory: c.MkDir(),
+	handler, err := NewHandler(Config{
+		Directory: dir,
 	})
-	c.Assert(err, check.IsNil)
-}
+	assert.Nil(t, err)
 
-func (s *FileSuite) TestUploadDownload(c *check.C) {
-	s.UploadDownload(c)
-}
-
-func (s *FileSuite) TestDownloadNotFound(c *check.C) {
-	s.DownloadNotFound(c)
+	t.Run("Stream", func(t *testing.T) {
+		test.Stream(t, handler)
+	})
+	t.Run("UploadDownload", func(t *testing.T) {
+		test.UploadDownload(t, handler)
+	})
+	t.Run("DownloadNotFound", func(t *testing.T) {
+		test.DownloadNotFound(t, handler)
+	})
 }

@@ -1475,7 +1475,7 @@ func (s *RoleSuite) TestExtractFrom(c *C) {
 	roles, traits, err = ExtractFromIdentity(&userGetter{
 		roles:  origRoles,
 		traits: origTraits,
-	}, identity)
+	}, *identity)
 	c.Assert(err, IsNil)
 	c.Assert(roles, DeepEquals, origRoles)
 	c.Assert(traits, DeepEquals, origTraits)
@@ -1495,7 +1495,7 @@ func (s *RoleSuite) TestExtractFrom(c *C) {
 	roles, traits, err = ExtractFromIdentity(&userGetter{
 		roles:  origRoles,
 		traits: origTraits,
-	}, identity)
+	}, *identity)
 	c.Assert(err, IsNil)
 	c.Assert(roles, DeepEquals, origRoles)
 	c.Assert(traits, DeepEquals, origTraits)
@@ -1534,7 +1534,7 @@ func (s *RoleSuite) TestExtractFromLegacy(c *C) {
 	roles, traits, err = ExtractFromIdentity(&userGetter{
 		roles:  origRoles,
 		traits: origTraits,
-	}, identity)
+	}, *identity)
 	c.Assert(err, IsNil)
 	c.Assert(roles, DeepEquals, origRoles)
 	c.Assert(traits, DeepEquals, origTraits)
@@ -1555,7 +1555,7 @@ func (s *RoleSuite) TestExtractFromLegacy(c *C) {
 	roles, traits, err = ExtractFromIdentity(&userGetter{
 		roles:  newRoles,
 		traits: newTraits,
-	}, identity)
+	}, *identity)
 	c.Assert(err, IsNil)
 	c.Assert(roles, DeepEquals, newRoles)
 	c.Assert(traits, DeepEquals, newTraits)
