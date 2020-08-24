@@ -124,6 +124,11 @@ spec:
       # regular expressions are also supported, for example the equivalent
       # of the list example above can be expressed as:
       'environment': '^test|staging$'
+      # negative matches use the '+not' prefix, this works with both exact
+      # matches and regular expressions.
+      # this is useful when another role may grant extended access and you
+      # don't want to exclude it entirely with a 'deny' rule below.
+      'environment': '+not production'
 
     # defines roles that this user can can request.
     # needed for teleport's request workflow

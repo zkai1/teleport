@@ -48,8 +48,19 @@ func ReplaceRegexp(expression string, replaceWith string, input string) (string,
 
 // SliceMatchesRegex checks if input matches any of the expressions. The
 // match is always evaluated as a regex either an exact match or regexp.
+//
+// If any expression starts with "+not ", the match is negated.
 func SliceMatchesRegex(input string, expressions []string) (bool, error) {
 	for _, expression := range expressions {
+		// Handle the "+not " prefix: flip the desired match outcome and remove
+		// it from the expression.
+		wantMatch := true
+		if strings.HasPrefix(expression, "+regexp.not(") && strings.HasSuffix(expression, ")") {
+			wantMatch = false
+			expression = strings.TrimPrefix(expression, "+regexp.not(")
+			expression = strings.TrimSuffix(expression, ")")
+		}
+
 		if !strings.HasPrefix(expression, "^") || !strings.HasSuffix(expression, "$") {
 			// replace glob-style wildcards with regexp wildcards
 			// for plain strings, and quote all characters that could
@@ -62,10 +73,10 @@ func SliceMatchesRegex(input string, expressions []string) (bool, error) {
 			return false, trace.BadParameter(err.Error())
 		}
 
-		// Since the expression is always surrounded by ^ and $ this is an exact
-		// match for either a a plain string (for example ^hello$) or for a regexp
-		// (for example ^hel*o$).
-		if expr.MatchString(input) {
+		// Since the expression is always surrounded by ^ and $ this is an
+		// exact match for either a plain string (for example ^hello$) or for a
+		// regexp (for example ^hel*o$).
+		if expr.MatchString(input) == wantMatch {
 			return true, nil
 		}
 	}
