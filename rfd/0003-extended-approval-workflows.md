@@ -13,7 +13,7 @@ on demand.
 
 ## Why
 
-Customers provide limited access to the infrastructure
+Customers providing limited access to infrastructure
 for contractors are lacking support for their scenarios.
 
 This document describes the scenarios and introduces design changes
@@ -24,7 +24,7 @@ to support them.
 Imagine two organizations, Acme Co and Contractor Inc.
 
 Acme Co serves multiple customers `A` and `B` via leaf clusters `a` and `b`
-connected to it's root cluster `acme`.
+connected to its root cluster `acme`.
 
 Acme Co creates a support issue `issue-1` for customer `A` and assigns it to
 Contractor Inc's employee Alice. Acme would like to provide temporary access
@@ -42,7 +42,7 @@ the ticket number.
 
 However, if the ticketing system is down, requests to login should be
 manually processed by the cluster administrator to provide
-emergency way to access the infrastructure.
+an emergency way to access the infrastructure.
 
 **Access to nodes**
 
@@ -51,7 +51,7 @@ Administrators of the company would like to let contractors see all nodes in the
 but have access to no nodes by default.
 
 Contractors of 'Pine Tree Inc' would have to request access to individual nodes
-and the access would have to be granted/denied by administrators in slack channel.
+and the access would have to be granted/denied by administrators in a Slack channel.
 
 ### Details
 
@@ -60,7 +60,7 @@ for scenarios described in "Why" section.
 
 #### Dynamic role requests
 
-We are going to modify `request` part of the roles to support pattern matching.
+We are going to modify the `request` part of the roles to support pattern matching.
 
 ```yaml
 kind: role
@@ -79,7 +79,7 @@ spec:
 
 #### Cluster access labels
 
-Clusters labels, similarly to `node_labels`,
+Cluster labels, similarly to `node_labels`,
 limit the access to clusters from the root cluster.
 
 ```yaml
@@ -112,7 +112,7 @@ metadata:
 spec:
   note: 'ticket-12345`
   user: 'bob'
-  # Role list can be empty, in case if Bob tries to access a resource
+  # Role list can be empty, in case Bob is trying to access a resource
   # and not a specific role
   roles: []
   # Bob has requested access to the mongodb as root
@@ -214,9 +214,9 @@ spec:
       roles: ['^customer-.*$']
 ```
 
-This role assigned to all contractors by default lets users to request access to customer related roles.
+This role assigned to all contractors by default lets users request access to customer related roles.
 
-Second role `customer-a` lets clients to see leaf cluster `customer-a` and access it:
+Second role `customer-a` lets clients see leaf cluster `customer-a` and access it:
 
 ```yaml
 kind: role
